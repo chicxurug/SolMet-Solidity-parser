@@ -28,6 +28,10 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws IOException {
+		if (args.length != 2) {
+			System.out.println("Two parameters are required: [a path to a Solidity file | a folder containing multiple Solidity files] [output csv file].");
+			System.exit(-1);
+		}
 		PrintWriter outFile = new PrintWriter(new File(args[1]));
 		outFile.println("SolidityFile;ContractName;Type;SLOC;LLOC;CLOC;NF;WMC;NL;Avg. McCC;Avg. NL;");
 		List<String> solPaths = new ArrayList<>();
