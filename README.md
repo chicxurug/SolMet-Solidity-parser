@@ -1,7 +1,7 @@
 # SolMet
 
 SolMet is a static analysis based metric calculator tool for Solidity smart contract programs.
-It is a * Work In Progress *, supporting the following size and complexity metrics
+It is a **Work In Progress**, supporting the following size and complexity metrics
 * SLOC - number of source code lines
 * LLOC - number of logical code lines (lines without empty and comment lines)
 * CLOC - number of comment lines
@@ -11,12 +11,22 @@ It is a * Work In Progress *, supporting the following size and complexity metri
 
 ## Building the tool
 
-You can build the tool with Maven.
+You can build the tool with Maven to get an executable jar file:
+
+```
+mvn package
+```
 
 ## Using the tool
 
 Usage is very simple, the built jar is executable.
-It requires two parameters: i) a Solidity file or a folder containing Solidity files ii) an output csv file path.
+It requires two parameters:
+ 1) a Solidity file or a folder containing Solidity files
+ 2) an output csv file path.
+ 
+```
+java -jar solmet-0.1.jar [input(s)] [output]
+```
 
 ## Output
 
