@@ -1,4 +1,4 @@
-// Generated from Solidity.g4 by ANTLR 4.7
+// Generated from solidity-antlr4-master\Solidity.g4 by ANTLR 4.7
 package hu.sed.parser.antlr4.grammar.solidity;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -77,16 +77,6 @@ public interface SolidityListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVersionConstraint(SolidityParser.VersionConstraintContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SolidityParser#versionNumber}.
-	 * @param ctx the parse tree
-	 */
-	void enterVersionNumber(SolidityParser.VersionNumberContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SolidityParser#versionNumber}.
-	 * @param ctx the parse tree
-	 */
-	void exitVersionNumber(SolidityParser.VersionNumberContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SolidityParser#importDeclaration}.
 	 * @param ctx the parse tree

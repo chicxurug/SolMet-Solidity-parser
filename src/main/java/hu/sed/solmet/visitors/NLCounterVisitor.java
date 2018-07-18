@@ -12,6 +12,7 @@ import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.ModifierDefinitionCo
 import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.StatementContext;
 import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.WhileStatementContext;
 
+@SuppressWarnings("deprecation")
 public class NLCounterVisitor extends SolidityBaseVisitor<Integer> {
 
 	private int nl;

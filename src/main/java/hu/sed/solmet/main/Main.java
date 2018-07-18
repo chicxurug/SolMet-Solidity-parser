@@ -1,12 +1,13 @@
 package hu.sed.solmet.main;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,16 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
 import hu.sed.parser.antlr4.grammar.solidity.SolidityLexer;
 import hu.sed.parser.antlr4.grammar.solidity.SolidityParser;
@@ -27,46 +38,72 @@ public class Main {
 		return new String(encoded, encoding);
 	}
 
-	public static void main(String[] args) throws IOException {
-		if (args.length != 2) {
-			System.out.println("Two parameters are required: [a path to a Solidity file | a folder containing multiple Solidity files] [output csv file].");
-			System.exit(-1);
-		}
-		PrintWriter outFile = new PrintWriter(new File(args[1]));
-		outFile.println("SolidityFile;ContractName;Type;SLOC;LLOC;CLOC;NF;WMC;NL;Avg. McCC;Avg. NL;");
-		List<String> solPaths = new ArrayList<>();
-		File path = new File(args[0]);
-		if (path.isFile()) {
-			solPaths.add(args[0]);
-		} else {
-			for (String s : path.list()) {
-				solPaths.add(new File(path, s).getAbsolutePath());
-			}
-		}
-		for (String solPath : solPaths) {
-//			System.out.println(new File(solPath).getName());
-			String contractCode = readFile(solPath, Charset.forName("UTF-8"));
-			CharStream charStream = CharStreams.fromString(contractCode);
-			SolidityLexer lexer = new SolidityLexer(charStream);
-			TokenStream tokens = new CommonTokenStream(lexer);
-			SolidityParser parser = new SolidityParser(tokens);
+	private static Options createCmdLineOptions() {
+		Options options = new Options();
+		OptionGroup input = new OptionGroup();
+		input.addOption(Option.builder("inputFile").hasArg().argName("file").build());
+		input.addOption(Option.builder("basePath").hasArg().argName("path").build());
+		input.setRequired(true);
+		options.addOption(Option.builder("outFile").hasArg().argName("name").desc("output file").required().build());
+		options.addOptionGroup(input);
+		// options.addOption(Option.builder("help").build());
+		return options;
+	}
 
-			ContractVisitor contractVisitor = new ContractVisitor(contractCode);
-			contractVisitor.visit(parser.sourceUnit());
-			Map<ContractDefinitionContext, Integer[]> metrics = contractVisitor.getMetricMap();
-			for (ContractDefinitionContext contract : metrics.keySet()) {
-				outFile.print(new File(solPath).getName() + ";" + contract.getChild(1).getText() + ";"
-						+ contract.getChild(0).getText() + ";");
-				for (int i = 0; i < metrics.get(contract).length; i++) {
-					outFile.print(metrics.get(contract)[i] + ";");
-				}
-				// Avg. McCC
-				outFile.print((double) metrics.get(contract)[4] / metrics.get(contract)[3] + ";");
-				// Avg. NL
-				outFile.println((double) metrics.get(contract)[5] / metrics.get(contract)[3] + ";");
+	public static void main(String[] args) throws IOException {
+		Options options = null;
+		try {
+			CommandLineParser cmdParser = new DefaultParser();
+			options = createCmdLineOptions();
+			CommandLine cmdLine = cmdParser.parse(options, args);
+			List<String> solPaths = new ArrayList<>();
+
+			if (cmdLine.hasOption("inputFile")) {
+				solPaths.add(cmdLine.getOptionValue("inputFile"));
 			}
+			if (cmdLine.hasOption("basePath")) {
+				File path = new File(cmdLine.getOptionValue("basePath"));
+				for (String s : path.list()) {
+					solPaths.add(new File(path, s).getAbsolutePath());
+				}
+			}
+			if (solPaths.isEmpty()) {
+				throw new ParseException("Empty contract list!");
+			}
+			
+			try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(cmdLine.getOptionValue("outFile")));
+					CSVPrinter csvPrinter = new CSVPrinter(writer,
+							CSVFormat.DEFAULT.withHeader("SolidityFile", "ContractName", "Type", "SLOC", "LLOC", "CLOC",
+									"NF", "WMC", "NL", "Avg. McCC", "Avg. NL").withDelimiter(';'));) {
+
+				for (String solPath : solPaths) {
+					String contractCode = readFile(solPath, Charset.forName("UTF-8"));
+					CharStream charStream = CharStreams.fromString(contractCode);
+					SolidityLexer lexer = new SolidityLexer(charStream);
+					TokenStream tokens = new CommonTokenStream(lexer);
+					SolidityParser parser = new SolidityParser(tokens);
+
+					ContractVisitor clontractVisitor = new ContractVisitor(contractCode);
+					clontractVisitor.visit(parser.sourceUnit());
+					Map<ContractDefinitionContext, Integer[]> metrics = clontractVisitor.getMetricMap();
+					for (ContractDefinitionContext contract : metrics.keySet()) {
+						ArrayList<Object> record = new ArrayList<Object>();
+						record.add(new File(solPath).getName());
+						record.add(contract.getChild(1).getText());
+						record.add(contract.getChild(0).getText());
+						record.addAll(Arrays.asList(metrics.get(contract)));
+						record.add((double) metrics.get(contract)[4] / metrics.get(contract)[3]);
+						record.add((double) metrics.get(contract)[5] / metrics.get(contract)[3]);
+						csvPrinter.printRecord(record);
+						csvPrinter.flush();
+					}
+				}
+			}
+		} catch (ParseException exp) {
+			System.out.println(exp.getMessage());
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("java -jar SolMet-1.0-SNAPSHOT.jar", options);
 		}
-		outFile.close();
 	}
 
 }

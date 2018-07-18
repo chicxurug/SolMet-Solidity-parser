@@ -11,6 +11,7 @@ import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.FunctionDefinitionCo
 import hu.sed.solmet.helper.LOCCalculator;
 
 
+@SuppressWarnings("deprecation")
 public class ContractVisitor extends SolidityBaseVisitor<Void> {
     
 	private int count;

@@ -1,4 +1,4 @@
-// Generated from Solidity.g4 by ANTLR 4.7
+// Generated from solidity-antlr4-master\Solidity.g4 by ANTLR 4.7
 package hu.sed.parser.antlr4.grammar.solidity;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -95,18 +95,6 @@ public class SolidityBaseListener implements SolidityListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitVersionConstraint(SolidityParser.VersionConstraintContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterVersionNumber(SolidityParser.VersionNumberContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitVersionNumber(SolidityParser.VersionNumberContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

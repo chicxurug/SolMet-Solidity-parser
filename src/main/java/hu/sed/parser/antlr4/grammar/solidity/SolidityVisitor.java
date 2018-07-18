@@ -1,4 +1,4 @@
-// Generated from Solidity.g4 by ANTLR 4.7
+// Generated from solidity-antlr4-master\Solidity.g4 by ANTLR 4.7
 package hu.sed.parser.antlr4.grammar.solidity;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -52,12 +52,6 @@ public interface SolidityVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVersionConstraint(SolidityParser.VersionConstraintContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SolidityParser#versionNumber}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitVersionNumber(SolidityParser.VersionNumberContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SolidityParser#importDeclaration}.
 	 * @param ctx the parse tree

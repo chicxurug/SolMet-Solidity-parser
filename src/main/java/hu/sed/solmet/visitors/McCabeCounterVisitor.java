@@ -9,6 +9,7 @@ import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.FunctionDefinitionCo
 import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.IfStatementContext;
 import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.WhileStatementContext;
 
+@SuppressWarnings("deprecation")
 public class McCabeCounterVisitor extends SolidityBaseVisitor<Integer> {
 
 	private int mcc;

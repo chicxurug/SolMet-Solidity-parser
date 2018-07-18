@@ -1,4 +1,4 @@
-// Generated from Solidity.g4 by ANTLR 4.7
+// Generated from solidity-antlr4-master\Solidity.g4 by ANTLR 4.7
 package hu.sed.parser.antlr4.grammar.solidity;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -60,13 +60,6 @@ public class SolidityBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitVersionConstraint(SolidityParser.VersionConstraintContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitVersionNumber(SolidityParser.VersionNumberContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
