@@ -28,7 +28,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>hu.sed.solidity.main.Main</mainClass>
+									<mainClass>hu.sed.solmet.main.Main</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>

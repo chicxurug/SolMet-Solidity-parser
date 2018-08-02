@@ -8,6 +8,8 @@ import org.antlr.v4.runtime.misc.NotNull;
 import hu.sed.parser.antlr4.grammar.solidity.SolidityBaseVisitor;
 import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.ContractDefinitionContext;
 import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.FunctionDefinitionContext;
+import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.InheritanceSpecifierContext;
+import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.SourceUnitContext;
 import hu.sed.solmet.helper.LOCCalculator;
 
 
@@ -18,12 +20,21 @@ public class ContractVisitor extends SolidityBaseVisitor<Void> {
 	private Map<String, Integer> contractDefCounts = new HashMap<>();	
 	
 	private ContractDefinitionContext currentContract;
-	// sloc, lloc, cloc, fcount, wmc, tnl
+	// sloc, lloc, cloc, fcount, wmc, tnl, dit
 	private Map<ContractDefinitionContext, Integer[]> contractMetrics = new HashMap<>();
+	// dit
+	private Map<String, Integer> contractDIT = new HashMap<>();
+	private CBOCounterVisitor cboCounter = new CBOCounterVisitor();
 	private String sourceText;
 	
 	public ContractVisitor(String sourceText) {
 		this.sourceText = sourceText;
+	}
+	@Override
+    public Void visitSourceUnit(@NotNull SourceUnitContext ctx) {
+		cboCounter.runInitialization(ctx);
+		super.visitSourceUnit(ctx);
+		return null;
 	}
     
 	@Override
@@ -35,13 +46,15 @@ public class ContractVisitor extends SolidityBaseVisitor<Void> {
 		int lloc = locCalc.getLLOC();
 		int cloc = locCalc.getCLOC();
         contractDefCounts.put(ctx.getStart().getText(), contractDefCounts.getOrDefault(ctx.getStart().getText(), 0) + 1 );
-        Integer[] mets = new Integer[6];
+        Integer[] mets = new Integer[8];
         mets[0] = sloc;
         mets[1] = lloc;
         mets[2] = cloc;
         mets[3] = 0;
         mets[4] = 0;
         mets[5] = 0;
+        mets[6] = calculateDIT(ctx);
+        mets[7] = cboCounter.calculateCBO(ctx);
         currentContract = ctx;
         contractMetrics.put(ctx, mets);
         super.visitContractDefinition(ctx);
@@ -49,6 +62,18 @@ public class ContractVisitor extends SolidityBaseVisitor<Void> {
         return null;
     }
 	
+	private int calculateDIT(ContractDefinitionContext ctx) {
+		int dit = 0;
+		for (InheritanceSpecifierContext ictx : ctx.inheritanceSpecifier()) {
+			String baseName = ictx.userDefinedTypeName().identifier().get(0).getText();
+			if (contractDIT.get(baseName) + 1 > dit) {
+				dit = contractDIT.get(baseName) + 1;
+			}
+		}
+		contractDIT.put(ctx.identifier().getText(), dit);
+		return dit;
+	}
+
 	@Override
     public Void visitFunctionDefinition(@NotNull FunctionDefinitionContext ctx) {
 		contractMetrics.get(currentContract)[3]++; 

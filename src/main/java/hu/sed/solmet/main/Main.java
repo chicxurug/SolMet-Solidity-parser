@@ -74,7 +74,7 @@ public class Main {
 			try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(cmdLine.getOptionValue("outFile")));
 					CSVPrinter csvPrinter = new CSVPrinter(writer,
 							CSVFormat.DEFAULT.withHeader("SolidityFile", "ContractName", "Type", "SLOC", "LLOC", "CLOC",
-									"NF", "WMC", "NL", "Avg. McCC", "Avg. NL").withDelimiter(';'));) {
+									"NF", "WMC", "NL", "DIT", "CBO", "Avg. McCC", "Avg. NL").withDelimiter(';'));) {
 
 				for (String solPath : solPaths) {
 					String contractCode = readFile(solPath, Charset.forName("UTF-8"));
