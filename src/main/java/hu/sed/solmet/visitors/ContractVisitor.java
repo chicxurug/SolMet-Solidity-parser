@@ -1,7 +1,9 @@
 package hu.sed.solmet.visitors;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -20,10 +22,11 @@ public class ContractVisitor extends SolidityBaseVisitor<Void> {
 	private Map<String, Integer> contractDefCounts = new HashMap<>();	
 	
 	private ContractDefinitionContext currentContract;
-	// sloc, lloc, cloc, fcount, wmc, tnl, dit
+	// sloc, lloc, cloc, fcount, wmc, tnl, tnle, dit, tnoa, cbo
+	// TODO: tnod, tnos, tnumpar, tna, lcom5, tnii/tnoi?
 	private Map<ContractDefinitionContext, Integer[]> contractMetrics = new HashMap<>();
-	// dit
 	private Map<String, Integer> contractDIT = new HashMap<>();
+	private Map<String, Set<String>> contractNOA = new HashMap<>();
 	private CBOCounterVisitor cboCounter = new CBOCounterVisitor();
 	private String sourceText;
 	
@@ -46,15 +49,17 @@ public class ContractVisitor extends SolidityBaseVisitor<Void> {
 		int lloc = locCalc.getLLOC();
 		int cloc = locCalc.getCLOC();
         contractDefCounts.put(ctx.getStart().getText(), contractDefCounts.getOrDefault(ctx.getStart().getText(), 0) + 1 );
-        Integer[] mets = new Integer[8];
+        Integer[] mets = new Integer[10];
         mets[0] = sloc;
         mets[1] = lloc;
         mets[2] = cloc;
         mets[3] = 0;
         mets[4] = 0;
         mets[5] = 0;
-        mets[6] = calculateDIT(ctx);
-        mets[7] = cboCounter.calculateCBO(ctx);
+        mets[6] = 0;
+        mets[7] = calculateDIT(ctx);
+        mets[8] = calculateNOA(ctx);
+        mets[9] = cboCounter.calculateCBO(ctx);
         currentContract = ctx;
         contractMetrics.put(ctx, mets);
         super.visitContractDefinition(ctx);
@@ -73,6 +78,17 @@ public class ContractVisitor extends SolidityBaseVisitor<Void> {
 		contractDIT.put(ctx.identifier().getText(), dit);
 		return dit;
 	}
+	
+	private int calculateNOA(ContractDefinitionContext ctx) {
+		contractNOA.put(ctx.identifier().getText(), new HashSet<>());
+		for (InheritanceSpecifierContext ictx : ctx.inheritanceSpecifier()) {
+			String baseName = ictx.userDefinedTypeName().identifier().get(0).getText();
+			contractNOA.get(ctx.identifier().getText()).add(baseName);
+			contractNOA.get(ctx.identifier().getText()).addAll(contractNOA.get(baseName));
+		}
+		
+		return contractNOA.get(ctx.identifier().getText()).size();
+	}
 
 	@Override
     public Void visitFunctionDefinition(@NotNull FunctionDefinitionContext ctx) {
@@ -81,6 +97,8 @@ public class ContractVisitor extends SolidityBaseVisitor<Void> {
 		contractMetrics.get(currentContract)[4] += mcc;
 		int nl = new NLCounterVisitor().visitFunctionDefinition(ctx);
 		contractMetrics.get(currentContract)[5] += nl;
+		int nle = new NLECounterVisitor().visitFunctionDefinition(ctx);
+		contractMetrics.get(currentContract)[6] += nle;
 		super.visitFunctionDefinition(ctx);
         return null;
     }
