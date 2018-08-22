@@ -74,7 +74,8 @@ public class Main {
 			try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(cmdLine.getOptionValue("outFile")));
 					CSVPrinter csvPrinter = new CSVPrinter(writer,
 							CSVFormat.DEFAULT.withHeader("SolidityFile", "ContractName", "Type", "SLOC", "LLOC", "CLOC",
-									"NF", "WMC", "NL", "NLE", "DIT", "NOA", "CBO", "Avg. McCC", "Avg. NL", "Avg. NLE").withDelimiter(';'));) {
+									"NF", "WMC", "NL", "NLE", "NUMPAR", "NOS", "DIT", "NOA", "NOD", "CBO", "NA", "NOI",
+									"Avg. McCC", "Avg. NL", "Avg. NLE", "Avg. NUMPAR", "Avg. NOS", "Avg. NOI").withDelimiter(';'));) {
 
 				for (String solPath : solPaths) {
 					String contractCode = readFile(solPath, Charset.forName("UTF-8"));
@@ -95,6 +96,9 @@ public class Main {
 						record.add((double) metrics.get(contract)[4] / metrics.get(contract)[3]);
 						record.add((double) metrics.get(contract)[5] / metrics.get(contract)[3]);
 						record.add((double) metrics.get(contract)[6] / metrics.get(contract)[3]);
+						record.add((double) metrics.get(contract)[7] / metrics.get(contract)[3]);
+						record.add((double) metrics.get(contract)[8] / metrics.get(contract)[3]);
+						record.add((double) metrics.get(contract)[14] / metrics.get(contract)[3]);
 						csvPrinter.printRecord(record);
 						csvPrinter.flush();
 					}
