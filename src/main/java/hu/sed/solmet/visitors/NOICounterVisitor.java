@@ -16,20 +16,23 @@ import hu.sed.parser.antlr4.grammar.solidity.SolidityParser.FunctionDefinitionCo
 public class NOICounterVisitor extends SolidityBaseVisitor<Integer> {
 
 	private Map<String, Set<String>> funcCalls = new HashMap<>();
-	private String currentFunc;	
-	
+	private String currentFunc;
+	private int anonymCtr = 0;
+
 	@Override
 	public Integer visitFunctionDefinition(@NotNull FunctionDefinitionContext ctx) {
-		funcCalls.put(ctx.identifier().getText(), new HashSet<>());
-		currentFunc = ctx.identifier().getText();
+		currentFunc = ctx.identifier() == null ? "anonym" + anonymCtr++ : ctx.identifier().getText();
+		funcCalls.put(currentFunc, new HashSet<>());
 		super.visitFunctionDefinition(ctx);
 		return funcCalls.get(currentFunc).size();
 	}
-	
+
 	@Override
 	public Integer visitFunctionCallArguments(@NotNull FunctionCallArgumentsContext ctx) {
-		ExpressionContext ectx = (ExpressionContext)ctx.getParent();
-		funcCalls.get(currentFunc).add(ectx.getChild(0).getText());
+		if (ctx.getParent() instanceof ExpressionContext) {
+			ExpressionContext ectx = (ExpressionContext) ctx.getParent();
+			funcCalls.get(currentFunc).add(ectx.getChild(0).getText());
+		}
 		return null;
 	}
 }

@@ -101,6 +101,12 @@ public interface SolidityVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStructDefinition(SolidityParser.StructDefinitionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SolidityParser#constructorDefinition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstructorDefinition(SolidityParser.ConstructorDefinitionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SolidityParser#modifierDefinition}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -305,11 +311,23 @@ public interface SolidityVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitThrowStatement(SolidityParser.ThrowStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SolidityParser#emitStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEmitStatement(SolidityParser.EmitStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SolidityParser#variableDeclarationStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitVariableDeclarationStatement(SolidityParser.VariableDeclarationStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SolidityParser#variableDeclarationList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariableDeclarationList(SolidityParser.VariableDeclarationListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SolidityParser#identifierList}.
 	 * @param ctx the parse tree
@@ -358,6 +376,12 @@ public interface SolidityVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunctionCallArguments(SolidityParser.FunctionCallArgumentsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link SolidityParser#functionCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionCall(SolidityParser.FunctionCallContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SolidityParser#assemblyBlock}.
 	 * @param ctx the parse tree

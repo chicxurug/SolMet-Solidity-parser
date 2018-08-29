@@ -64,7 +64,9 @@ public class Main {
 			if (cmdLine.hasOption("basePath")) {
 				File path = new File(cmdLine.getOptionValue("basePath"));
 				for (String s : path.list()) {
-					solPaths.add(new File(path, s).getAbsolutePath());
+					File addrDir = new File(path, s);
+					String solFile = addrDir.list()[0];
+					solPaths.add(new File(addrDir, solFile).getAbsolutePath());
 				}
 			}
 			if (solPaths.isEmpty()) {
@@ -78,6 +80,7 @@ public class Main {
 									"Avg. McCC", "Avg. NL", "Avg. NLE", "Avg. NUMPAR", "Avg. NOS", "Avg. NOI").withDelimiter(';'));) {
 
 				for (String solPath : solPaths) {
+					System.out.println("Parsing " + new File(solPath).getPath());
 					String contractCode = readFile(solPath, Charset.forName("UTF-8"));
 					CharStream charStream = CharStreams.fromString(contractCode);
 					SolidityLexer lexer = new SolidityLexer(charStream);
@@ -89,16 +92,16 @@ public class Main {
 					Map<ContractDefinitionContext, Integer[]> metrics = clontractVisitor.getMetricMap();
 					for (ContractDefinitionContext contract : metrics.keySet()) {
 						ArrayList<Object> record = new ArrayList<Object>();
-						record.add(new File(solPath).getName());
+						record.add(new File(solPath).getPath());
 						record.add(contract.getChild(1).getText());
 						record.add(contract.getChild(0).getText());
 						record.addAll(Arrays.asList(metrics.get(contract)));
-						record.add((double) metrics.get(contract)[4] / metrics.get(contract)[3]);
-						record.add((double) metrics.get(contract)[5] / metrics.get(contract)[3]);
-						record.add((double) metrics.get(contract)[6] / metrics.get(contract)[3]);
-						record.add((double) metrics.get(contract)[7] / metrics.get(contract)[3]);
-						record.add((double) metrics.get(contract)[8] / metrics.get(contract)[3]);
-						record.add((double) metrics.get(contract)[14] / metrics.get(contract)[3]);
+						record.add(metrics.get(contract)[3] == 0 ? 0f : (double) metrics.get(contract)[4] / metrics.get(contract)[3]);
+						record.add(metrics.get(contract)[3] == 0 ? 0f : (double) metrics.get(contract)[5] / metrics.get(contract)[3]);
+						record.add(metrics.get(contract)[3] == 0 ? 0f : (double) metrics.get(contract)[6] / metrics.get(contract)[3]);
+						record.add(metrics.get(contract)[3] == 0 ? 0f : (double) metrics.get(contract)[7] / metrics.get(contract)[3]);
+						record.add(metrics.get(contract)[3] == 0 ? 0f : (double) metrics.get(contract)[8] / metrics.get(contract)[3]);
+						record.add(metrics.get(contract)[3] == 0 ? 0f : (double) metrics.get(contract)[14] / metrics.get(contract)[3]);
 						csvPrinter.printRecord(record);
 						csvPrinter.flush();
 					}
