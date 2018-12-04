@@ -75,7 +75,7 @@ public class Main {
 			
 			try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(cmdLine.getOptionValue("outFile")));
 					CSVPrinter csvPrinter = new CSVPrinter(writer,
-							CSVFormat.DEFAULT.withHeader("SolidityFile", "ContractName", "Type", "SLOC", "LLOC", "CLOC",
+							CSVFormat.DEFAULT.withHeader("SolidityFile", "ETHAddress", "ContractName", "Type", "SLOC", "LLOC", "CLOC",
 									"NF", "WMC", "NL", "NLE", "NUMPAR", "NOS", "DIT", "NOA", "NOD", "CBO", "NA", "NOI",
 									"Avg. McCC", "Avg. NL", "Avg. NLE", "Avg. NUMPAR", "Avg. NOS", "Avg. NOI").withDelimiter(';'));) {
 
@@ -87,12 +87,13 @@ public class Main {
 					TokenStream tokens = new CommonTokenStream(lexer);
 					SolidityParser parser = new SolidityParser(tokens);
 
-					ContractVisitor clontractVisitor = new ContractVisitor(contractCode);
-					clontractVisitor.visit(parser.sourceUnit());
-					Map<ContractDefinitionContext, Integer[]> metrics = clontractVisitor.getMetricMap();
+					ContractVisitor contractVisitor = new ContractVisitor(contractCode);
+					contractVisitor.visit(parser.sourceUnit());
+					Map<ContractDefinitionContext, Integer[]> metrics = contractVisitor.getMetricMap();
 					for (ContractDefinitionContext contract : metrics.keySet()) {
 						ArrayList<Object> record = new ArrayList<Object>();
-						record.add(new File(solPath).getPath());
+						record.add(new File(solPath).getName());
+						record.add(new File(solPath).getParentFile().getName().toLowerCase());
 						record.add(contract.getChild(1).getText());
 						record.add(contract.getChild(0).getText());
 						record.addAll(Arrays.asList(metrics.get(contract)));
