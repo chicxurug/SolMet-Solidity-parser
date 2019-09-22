@@ -37,6 +37,9 @@ It requires two parameters:
 ```
 java -jar solmet-0.1.jar [input(s)] [output]
 ```
+## Publications
+Hegedűs P., "Towards Analyzing the Complexity Landscape of
+Solidity Based Ethereum Smart Contracts", ACM/IEEE 1st International Workshop on Emerging Trends in Software Engineering for Blockchain, 2018 [[PDF]](http://publicatio.bibl.u-szeged.hu/14474/1/3hnJuJZyEJkfd6NEz9E0PF.pdf)
 
 ## Output
 
