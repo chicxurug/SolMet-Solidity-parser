@@ -1,0 +1,17 @@
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/visitors/McCabeCounterVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/parser/antlr4/grammar/solidity/SolidityVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/parser/antlr4/grammar/solidity/SolidityListener.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/visitors/NODCounterVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/parser/antlr4/grammar/solidity/SolidityLexer.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/parser/antlr4/grammar/solidity/SolidityParser.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/visitors/NOICounterVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/visitors/CBOCounterVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/visitors/ContractVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/visitors/NUMPARCounterVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/parser/antlr4/grammar/solidity/SolidityBaseVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/main/Main.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/helper/LOCCalculator.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/visitors/NestingCounterVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/visitors/NLECounterVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/solmet/visitors/NLCounterVisitor.java
+/Users/sbacha/SolMet-Solidity-parser/src/main/java/hu/sed/parser/antlr4/grammar/solidity/SolidityBaseListener.java
