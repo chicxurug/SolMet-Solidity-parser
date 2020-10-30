@@ -4,7 +4,7 @@
   },
   "author": "",
   "description": "",
- "repository": {
+  "repository": {
     "type": "git",
     "url": "git://github.com/sambacha/SolMet-Solidity-Parser.git"
   },
