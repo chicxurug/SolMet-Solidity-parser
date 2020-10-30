@@ -1,0 +1,17 @@
+name: maven
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    #    strategy:
+    #      matrix:
+    #        java-version: ['8', '11']
+
+    steps:
+      - name: Build and Test
+        uses: qcastel/github-actions-maven/actions/maven@master
+        with:
+          maven-args: "clean install"

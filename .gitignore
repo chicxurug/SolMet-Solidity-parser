@@ -1,3 +1,5 @@
 .DS_Store
 google-java-format-1.9-all-deps.jar
-*.jar
+#*.jar
+.DS_Store
+node_modules

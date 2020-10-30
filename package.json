@@ -1,0 +1,29 @@
+{
+  "bin": {
+    "solmet-solidity-parser": "jdeploy-bundle/jdeploy.js"
+  },
+  "author": "",
+  "description": "",
+ "repository": {
+    "type": "git",
+    "url": "git://github.com/sambacha/SolMet-Solidity-Parser.git"
+  },
+  "main": "index.js",
+  "preferGlobal": true,
+  "repository": "",
+  "version": "1.0.0",
+  "jdeploy": {
+    "jar": "bin/SolMet-1.0-SNAPSHOT.jar"
+  },
+  "dependencies": {
+    "shelljs": "^0.7.5"
+  },
+  "license": "ISC",
+  "name": "solmet-solidity-parser",
+  "files": [
+    "jdeploy-bundle"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
