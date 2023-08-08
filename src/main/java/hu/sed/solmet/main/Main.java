@@ -59,7 +59,7 @@ public class Main {
 			List<String> solPaths = new ArrayList<>();
 
 			if (cmdLine.hasOption("inputFile")) {
-				solPaths.add(cmdLine.getOptionValue("inputFile"));
+				solPaths.add(new File(cmdLine.getOptionValue("inputFile")).getAbsolutePath());
 			}
 			if (cmdLine.hasOption("basePath")) {
 				File path = new File(cmdLine.getOptionValue("basePath"));
